@@ -1,47 +1,21 @@
 # XRD Designer Skill
 
+[![GitHub](https://img.shields.io/badge/GitHub-mzupan%2Fclaude--skill--xrd--designer-blue)](https://github.com/mzupan/claude-skill-xrd-designer)
+
 A Claude Code skill for designing and generating Crossplane XRDs (CompositeResourceDefinitions) with function-pythonic compositions.
-
-## Features
-
-### XRD Types Supported
-
-| Type | Description |
-|------|-------------|
-| **Service Integration** | HTTP-based sync to external services with rate-limiting |
-| **Data Source** | Read-only lookups (no managed resources created) |
-| **Multi-Cloud** | AWS + GCP compositions from single definition |
-| **Single-Cloud** | AWS-only or GCP-only resources |
-| **Elasticsearch** | Index, transform, and request management patterns |
-
-### Patterns Included
-
-- **Rate-limiting** - 5-minute intervals via status timestamps to prevent API spam
-- **K8s Secret Lookup** - Service account token + Kubernetes API for secret retrieval
-- **HTTP Service Sync** - GET/PUT/POST with idempotent operations
-- **Status Preservation** - Full status copy during rate-limit windows
-- **Error Handling** - Connection, timeout, JSON, HTTP error patterns
-- **Elasticsearch Auth** - Secret-based authentication for ES clusters
-
-### Templates Provided
-
-- Service Integration XRD (definition + composition)
-- Data Source XRD (definition + composition)
-- Elasticsearch XRD patterns
-- Complete function-pythonic composition examples
 
 ## Installation
 
 ### Option 1: Personal Installation (Recommended)
 
-Copy the skill to your Claude Code skills directory:
+Clone directly to your Claude Code skills directory:
 
 ```bash
 # Create skills directory if it doesn't exist
 mkdir -p ~/.claude/skills
 
-# Clone or copy the skill
-cp -r xrd-designer ~/.claude/skills/
+# Clone the skill
+git clone https://github.com/mzupan/claude-skill-xrd-designer.git ~/.claude/skills/xrd-designer
 ```
 
 Your directory structure should look like:
@@ -55,13 +29,24 @@ Your directory structure should look like:
 
 ### Option 2: Project Installation (Team Sharing)
 
-Add to your project's `.claude/skills/` directory:
+Add as a git submodule to your project:
 
 ```bash
+# Add as submodule
+git submodule add https://github.com/mzupan/claude-skill-xrd-designer.git .claude/skills/xrd-designer
+
+# Or clone directly
 mkdir -p .claude/skills
-cp -r xrd-designer .claude/skills/
-git add .claude/skills/xrd-designer
-git commit -m "Add XRD designer skill"
+git clone https://github.com/mzupan/claude-skill-xrd-designer.git .claude/skills/xrd-designer
+```
+
+### Updating
+
+Pull the latest changes:
+
+```bash
+cd ~/.claude/skills/xrd-designer
+git pull origin main
 ```
 
 ### Verification
@@ -82,24 +67,47 @@ The skill auto-activates when you mention:
 
 ### Example Prompts
 
-**Design a new XRD:**
+**AWS ElastiCache with connection secrets:**
 ```
-Design an XRD for managing Redis cache configurations
-```
-
-**Service integration pattern:**
-```
-Create an XRD that syncs feature flags to an external service via HTTP
+Design an XRD that provisions an AWS ElastiCache Redis cluster and writes
+the connection endpoint and auth token to a Kubernetes Secret for apps to consume
 ```
 
-**Data source lookup:**
+**RDS Database with ConfigMap:**
 ```
-I need an XRD that looks up AWS EC2 instances by tag without managing them
+Create an XRD for provisioning AWS RDS PostgreSQL instances that outputs
+the connection string, host, port, and database name to a ConfigMap
 ```
 
-**Elasticsearch resource:**
+**S3 Bucket with IAM credentials:**
 ```
-Create an XRD for managing Elasticsearch ingest pipelines
+I need an XRD that creates an S3 bucket with a dedicated IAM user and
+stores the access keys in a Kubernetes Secret
+```
+
+**Multi-cloud object storage:**
+```
+Design an XRD that abstracts object storage - provisions S3 on AWS or
+Cloud Storage on GCP based on a provider field, outputs bucket name and
+endpoint to a ConfigMap
+```
+
+**Service mesh integration:**
+```
+Create an XRD that syncs service entries to Istio by calling the Kiali API,
+tracking sync status and last sync time
+```
+
+**Elasticsearch index with ILM:**
+```
+Design an XRD for managing Elasticsearch indices that creates the index,
+applies index lifecycle management policies, and tracks document count in status
+```
+
+**Secret rotation:**
+```
+Create an XRD that generates database credentials, stores them in a Secret,
+and automatically rotates them every 30 days by calling an external vault API
 ```
 
 ### Workflow
@@ -202,6 +210,10 @@ Description of when to use this pattern.
 - Claude Code with skills support
 - Crossplane cluster (for applying generated XRDs)
 - function-pythonic installed in cluster
+
+## Contributing
+
+Contributions welcome! Please open an issue or PR at [github.com/mzupan/claude-skill-xrd-designer](https://github.com/mzupan/claude-skill-xrd-designer).
 
 ## License
 
